@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 Spring Initializr Configuration:
-https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.1&packaging=jar&jvmVersion=11&groupId=com.sampaio.hiroshi&artifactId=WorstMovie&name=WorstMovie&description=&packageName=com.sampaio.hiroshi.WorstMovie&dependencies=webflux,data-r2dbc,h2
+https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.1&packaging=jar&jvmVersion=11&groupId=com.sampaio.hiroshi&artifactId=WorstMovie&name=WorstMovie&description=&packageName=com.sampaio.hiroshi.WorstMovie&dependencies=webflux,data-r2dbc,h2,codecentric-spring-boot-admin-server
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -19,6 +19,7 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.1
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
+		<spring-boot-admin.version>2.7.1</spring-boot-admin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -28,6 +29,10 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.1
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-server</artifactId>
 		</dependency>
 
 		<dependency>
@@ -51,6 +56,17 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.1
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>de.codecentric</groupId>
+				<artifactId>spring-boot-admin-dependencies</artifactId>
+				<version>${spring-boot-admin.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>
