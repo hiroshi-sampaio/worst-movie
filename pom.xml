@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 Spring Initializr Configuration:
-https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.1&packaging=jar&jvmVersion=11&groupId=com.sampaio.hiroshi&artifactId=WorstMovie&name=WorstMovie&description=&packageName=com.sampaio.hiroshi.WorstMovie&dependencies=webflux,data-r2dbc,h2,codecentric-spring-boot-admin-server
+https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.1&packaging=jar&jvmVersion=11&groupId=com.sampaio.hiroshi&artifactId=WorstMovie&name=WorstMovie&description=&packageName=com.sampaio.hiroshi.WorstMovie&dependencies=webflux,data-r2dbc,h2,codecentric-spring-boot-admin-server,lombok
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -46,6 +46,11 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.1
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -73,6 +78,14 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.1
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
