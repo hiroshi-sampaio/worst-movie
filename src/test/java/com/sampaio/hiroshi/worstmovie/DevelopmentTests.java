@@ -1,6 +1,6 @@
 package com.sampaio.hiroshi.worstmovie;
 
-import com.sampaio.hiroshi.worstmovie.domain.studio.Studio;
+import com.sampaio.hiroshi.worstmovie.app.studio.Studio;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "logging.level.com.sampaio.hiroshi.worstmovie=trace")
-class WorstMovieApplicationTests {
+class DevelopmentTests {
 
     @Autowired
     TestRestTemplate template;
