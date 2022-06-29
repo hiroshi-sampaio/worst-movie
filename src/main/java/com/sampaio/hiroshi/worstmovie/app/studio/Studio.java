@@ -6,7 +6,7 @@ import lombok.extern.jackson.Jacksonized;
 import org.springframework.data.annotation.Id;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @Jacksonized
 public class Studio {
 
