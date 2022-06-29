@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 Spring Initializr Configuration:
-https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.1&packaging=jar&jvmVersion=11&groupId=com.sampaio.hiroshi&artifactId=WorstMovie&name=WorstMovie&description=&packageName=com.sampaio.hiroshi.WorstMovie&dependencies=webflux,data-r2dbc,h2,codecentric-spring-boot-admin-server,lombok
+https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.1&packaging=jar&jvmVersion=11&groupId=com.sampaio.hiroshi&artifactId=WorstMovie&name=WorstMovie&description=&packageName=com.sampaio.hiroshi.WorstMovie&dependencies=webflux,data-r2dbc,h2,codecentric-spring-boot-admin-server,lombok,validation
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -25,6 +25,10 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.1
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-r2dbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
