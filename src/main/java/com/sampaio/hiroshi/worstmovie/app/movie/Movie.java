@@ -1,7 +1,7 @@
-package com.sampaio.hiroshi.worstmovie.domain.movie;
+package com.sampaio.hiroshi.worstmovie.app.movie;
 
-import com.sampaio.hiroshi.worstmovie.domain.producer.Producer;
-import com.sampaio.hiroshi.worstmovie.domain.studio.Studio;
+import com.sampaio.hiroshi.worstmovie.app.producer.Producer;
+import com.sampaio.hiroshi.worstmovie.app.studio.Studio;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;

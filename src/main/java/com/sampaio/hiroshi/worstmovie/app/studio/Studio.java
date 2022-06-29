@@ -1,4 +1,4 @@
-package com.sampaio.hiroshi.worstmovie.domain.producer;
+package com.sampaio.hiroshi.worstmovie.app.studio;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,9 +8,9 @@ import org.springframework.data.annotation.Id;
 @Data
 @Builder
 @Jacksonized
-public class Producer {
+public class Studio {
 
     @Id
     private Long id;
-    private final String fistName, middleNames, lastName;
+    private String name;
 }
