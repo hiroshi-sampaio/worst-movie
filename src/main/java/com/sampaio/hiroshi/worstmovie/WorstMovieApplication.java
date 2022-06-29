@@ -1,4 +1,4 @@
-package com.sampaio.hiroshi.WorstMovie;
+package com.sampaio.hiroshi.worstmovie;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

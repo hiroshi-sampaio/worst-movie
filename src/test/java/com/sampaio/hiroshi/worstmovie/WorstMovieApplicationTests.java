@@ -1,4 +1,4 @@
-package com.sampaio.hiroshi.WorstMovie;
+package com.sampaio.hiroshi.worstmovie;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
