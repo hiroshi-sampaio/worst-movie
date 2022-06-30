@@ -13,6 +13,7 @@ import org.springframework.data.domain.Example;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
@@ -140,8 +141,19 @@ class ManyToManyRepositoriesTest {
                                         .movieId(1L)
                                         .build()))
                 .doOnNext(movieToStudio -> log.trace("Fetch {}", movieToStudio))
-                .doOnNext(movieToStudioRepository::delete)
-                .doOnNext(movieToStudio -> log.trace("Deleted {}", movieToStudio))
+                .flatMap(movieToStudio -> movieToStudioRepository.deleteByMovieIdAndStudioId(movieToStudio.getMovieId(), movieToStudio.getStudioId()))
                 .blockLast();
+
+        var deletedMovieToStudioList = movieToStudioRepository.findAll(
+                        Example.of(
+                                MovieToStudio.builder()
+                                        .movieId(1L)
+                                        .build()))
+                .doOnNext(movieToStudio -> log.trace("Fetch {}", movieToStudio))
+                .collectList()
+                .block();
+
+        assertThat(deletedMovieToStudioList).isNotNull();
+        assertThat(deletedMovieToStudioList).isEmpty();
     }
 }
