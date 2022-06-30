@@ -1,5 +1,6 @@
 package com.sampaio.hiroshi.worstmovie.app.movie;
 
+import com.sampaio.hiroshi.worstmovie.app.common.EntityDoesNotExistException;
 import com.sampaio.hiroshi.worstmovie.app.common.IdMustBeEmptyException;
 import com.sampaio.hiroshi.worstmovie.app.common.IdMustBeGivenException;
 import com.sampaio.hiroshi.worstmovie.app.producer.ProducerRepository;
@@ -107,7 +108,13 @@ public class MovieService {
             throw new IdMustBeGivenException();
         }
 
-        return null;
+        // FIXME relation deltas! Do not just save!
+        return movieRepository.existsById(moviePayload.getId())
+                .doOnNext(exists -> {
+                    if (!exists) throw new EntityDoesNotExistException();
+                })
+                .then(movieRepository.save(mapper.toMovie(moviePayload)))
+                .then(Mono.empty());
     }
 
     public Mono<Void> deleteById(Long id) {

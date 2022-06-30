@@ -37,14 +37,6 @@ public class MovieController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<ResponseEntity<Void>> put(@RequestBody @NotNull MoviePayload moviePayload) {
         return service.update(moviePayload);
-/*
-        return repository.existsById(moviePayload.getId())
-                .doOnNext(exists -> {
-                    if (!exists) throw new EntityDoesNotExistException();
-                })
-                .then(repository.save(mapper.toMovie(moviePayload)))
-                .then(Mono.empty());
-*/
     }
 
     @DeleteMapping("/{id}")
