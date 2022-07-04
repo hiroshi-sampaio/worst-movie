@@ -3,7 +3,6 @@ package com.sampaio.hiroshi.worstmovie.app.movie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -35,7 +34,9 @@ public class MovieController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<ResponseEntity<Void>> put(@RequestBody @NotNull MoviePayload moviePayload) {
+    public Mono<Void> put(@RequestBody @NotNull MoviePayload moviePayload) {
+
+        log.trace("put {}", moviePayload);
         return service.update(moviePayload);
     }
 
@@ -43,6 +44,7 @@ public class MovieController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> delete(@PathVariable @NotNull Long id) {
 
+        log.trace("delete {}", id);
         return service.deleteById(id);
     }
 

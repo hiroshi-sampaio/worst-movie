@@ -127,21 +127,20 @@ class MovieDevelopmentTests {
                                 .collect(Collectors.toUnmodifiableList()))
                 .build();
 
+        log.trace("Changed Movie: {}", changedMovie);
+
         ResponseEntity<Void> putResponse = template.exchange(MOVIES_ROUTE, HttpMethod.PUT, new HttpEntity<>(changedMovie), Void.class);
 
         assertThat(putResponse).isNotNull();
         assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-/*
-
-        var fetchChangedMovieResponse = template.getForEntity(resourceUri, Movie.class);
+        var fetchChangedMovieResponse = template.getForEntity(resourceUri, MoviePayload.class);
 
         assertThat(fetchChangedMovieResponse).isNotNull();
         assertThat(fetchChangedMovieResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         assertThat(fetchChangedMovieResponse.getBody()).isNotNull();
-        assertThat(fetchChangedMovieResponse.getBody()).usingRecursiveComparison().isEqualTo(changedMovie);
-
+        assertThat(changedMovie).usingRecursiveComparison().isEqualTo(fetchChangedMovieResponse.getBody());
 
 
         // Deleting
@@ -151,12 +150,11 @@ class MovieDevelopmentTests {
         assertThat(deleteResponse).isNotNull();
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        var fetchDeletedMovieResponse = template.getForEntity(resourceUri, Movie.class);
+        var fetchDeletedMovieResponse = template.getForEntity(resourceUri, MoviePayload.class);
 
         assertThat(fetchDeletedMovieResponse).isNotNull();
         assertThat(fetchDeletedMovieResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         assertThat(fetchDeletedMovieResponse.getBody()).isNull();
-*/
     }
 }

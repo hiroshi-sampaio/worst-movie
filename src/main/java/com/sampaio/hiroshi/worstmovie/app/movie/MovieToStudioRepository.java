@@ -5,5 +5,7 @@ import reactor.core.publisher.Mono;
 
 public interface MovieToStudioRepository extends R2dbcRepository<MovieToStudio, Void> {
 
+    Mono<Void> deleteByMovieId(Long movieId);
+
     Mono<Void> deleteByMovieIdAndStudioId(Long movieId, Long studioId);
 }

@@ -3,15 +3,19 @@ package com.sampaio.hiroshi.worstmovie.app.movie;
 import com.sampaio.hiroshi.worstmovie.app.common.EntityDoesNotExistException;
 import com.sampaio.hiroshi.worstmovie.app.common.IdMustBeEmptyException;
 import com.sampaio.hiroshi.worstmovie.app.common.IdMustBeGivenException;
+import com.sampaio.hiroshi.worstmovie.app.producer.Producer;
 import com.sampaio.hiroshi.worstmovie.app.producer.ProducerRepository;
+import com.sampaio.hiroshi.worstmovie.app.studio.Studio;
 import com.sampaio.hiroshi.worstmovie.app.studio.StudioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -102,22 +106,60 @@ public class MovieService {
                                 .build());
     }
 
-    public Mono<ResponseEntity<Void>> update(MoviePayload moviePayload) {
+    public Mono<Void> update(MoviePayload moviePayload) {
 
         if (isNull(moviePayload.getId())) {
             throw new IdMustBeGivenException();
         }
 
-        // FIXME relation deltas! Do not just save!
         return movieRepository.existsById(moviePayload.getId())
                 .doOnNext(exists -> {
                     if (!exists) throw new EntityDoesNotExistException();
                 })
-                .then(movieRepository.save(mapper.toMovie(moviePayload)))
-                .then(Mono.empty());
+                .then(Mono.when(
+                        movieRepository.save(mapper.toMovie(moviePayload)),
+                        movieToStudioRepository.deleteByMovieId(moviePayload.getId()),
+                        movieToProducerRepository.deleteByMovieId(moviePayload.getId())))
+                .then(Mono.when(
+                        movieToStudioRepository
+                                .saveAll(
+                                        StreamSupport
+                                                .stream(moviePayload.getStudios().spliterator(), false)
+                                                .map(Studio::getId)
+                                                .map(studioId ->
+                                                        MovieToStudio.builder()
+                                                                .movieId(moviePayload.getId())
+                                                                .studioId(studioId)
+                                                                .build())
+                                                .collect(Collectors.toList()))
+                                .collectList(),
+                        movieToProducerRepository
+                                .saveAll(
+                                        StreamSupport
+                                                .stream(moviePayload.getProducers().spliterator(), false)
+                                                .map(Producer::getId)
+                                                .map(producerId ->
+                                                        MovieToProducer.builder()
+                                                                .movieId(moviePayload.getId())
+                                                                .producerId(producerId)
+                                                                .build())
+                                                .collect(Collectors.toList()))
+                                .collectList()));
     }
 
-    public Mono<Void> deleteById(Long id) {
-        return null;
+    public Mono<Void> deleteById(Long movieId) {
+
+        if (isNull(movieId)) {
+            throw new IdMustBeGivenException();
+        }
+
+        return movieRepository.existsById(movieId)
+                .doOnNext(exists -> {
+                    if (!exists) throw new EntityDoesNotExistException();
+                })
+                .then(Mono.when(
+                        movieToStudioRepository.deleteByMovieId(movieId),
+                        movieToProducerRepository.deleteByMovieId(movieId)))
+                .then(movieRepository.deleteById(movieId));
     }
 }
