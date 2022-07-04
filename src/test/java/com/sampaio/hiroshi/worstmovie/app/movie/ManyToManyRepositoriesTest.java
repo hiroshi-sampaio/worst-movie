@@ -158,5 +158,29 @@ class ManyToManyRepositoriesTest {
 
         assertThat(deletedMovieToStudioList).isNotNull();
         assertThat(deletedMovieToStudioList).isEmpty();
+
+
+        movieToProducerRepository.findAll(
+                        Example.of(MovieToProducer.builder()
+                                .movieId(1L)
+                                .build()))
+                .doOnNext(movieToProducer -> log.trace("Fetch {}", movieToProducer))
+                .flatMap(movieToProducer ->
+                        movieToProducerRepository
+                                .deleteByMovieIdAndProducerId(
+                                        movieToProducer.getMovieId(),
+                                        movieToProducer.getProducerId()))
+                .blockLast();
+
+        var deletedMovieToProducerList = movieToProducerRepository.findAll(
+                        Example.of(MovieToProducer.builder()
+                                .movieId(1L)
+                                .build()))
+                .doOnNext(movieToProducer -> log.trace("Fetch {}", movieToProducer))
+                .collectList()
+                .block();
+
+        assertThat(deletedMovieToProducerList).isNotNull();
+        assertThat(deletedMovieToProducerList).isEmpty();
     }
 }
