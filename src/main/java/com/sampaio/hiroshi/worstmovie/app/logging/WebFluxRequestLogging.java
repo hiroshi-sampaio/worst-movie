@@ -17,10 +17,15 @@ public class WebFluxRequestLogging implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 
         var request = exchange.getRequest();
-        log.trace("{} {} {}", request.getMethod(), request.getURI(),
-                request.getHeaders().toSingleValueMap().entrySet().stream()
+        log.trace("{} {} {}",
+                request.getMethod(),
+                request.getURI(),
+                request.getHeaders()
+                        .toSingleValueMap()
+                        .entrySet()
+                        .stream()
                         .map(e -> "\n" + e.getKey() + " = " + e.getValue())
                         .collect(Collectors.joining()));
-        return chain.filter(exchange);
+        return chain.filter(new LoggingWebExchange(exchange));
     }
 }
