@@ -1,9 +1,15 @@
 package com.sampaio.hiroshi.worstmovie;
 
 import com.sampaio.hiroshi.worstmovie.app.movie.MoviePayload;
+import com.sampaio.hiroshi.worstmovie.app.movie.MovieRepository;
+import com.sampaio.hiroshi.worstmovie.app.movie.MovieToProducerRepository;
+import com.sampaio.hiroshi.worstmovie.app.movie.MovieToStudioRepository;
 import com.sampaio.hiroshi.worstmovie.app.producer.Producer;
+import com.sampaio.hiroshi.worstmovie.app.producer.ProducerRepository;
 import com.sampaio.hiroshi.worstmovie.app.studio.Studio;
+import com.sampaio.hiroshi.worstmovie.app.studio.StudioRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +30,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = "logging.level.com.sampaio.hiroshi.worstmovie=trace")
+        properties = {
+                "logging.level.com.sampaio.hiroshi.worstmovie=trace",
+                "spring.profiles.active=test"})
 class MovieDevelopmentTests {
 
     public static final String STUDIOS_ROUTE = "/studios";
@@ -32,6 +40,17 @@ class MovieDevelopmentTests {
     public static final String MOVIES_ROUTE = "/movies";
     @Autowired
     TestRestTemplate template;
+    @Autowired
+    StudioRepository studioRepository;
+    @Autowired
+    ProducerRepository producerRepository;
+    @Autowired
+    MovieRepository movieRepository;
+    @Autowired
+    MovieToStudioRepository movieToStudioRepository;
+    @Autowired
+    MovieToProducerRepository movieToProducerRepository;
+
 
     @BeforeEach
     void populateDatabase() {
@@ -66,6 +85,15 @@ class MovieDevelopmentTests {
                 });
 
 
+    }
+
+    @AfterEach
+    void clearDatabase() {
+        movieToProducerRepository.deleteAll().block();
+        movieToStudioRepository.deleteAll().block();
+        studioRepository.deleteAll().block();
+        movieRepository.deleteAll().block();
+        producerRepository.deleteAll().block();
     }
 
     @Test

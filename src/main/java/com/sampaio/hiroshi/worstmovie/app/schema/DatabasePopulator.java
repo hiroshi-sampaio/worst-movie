@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ import java.util.stream.IntStream;
 @Slf4j
 @DependsOn("databaseSchemaCreator")
 @Component
+@Profile("!test")
 @RequiredArgsConstructor
 public class DatabasePopulator implements ApplicationRunner {
 
@@ -56,7 +58,7 @@ public class DatabasePopulator implements ApplicationRunner {
                                 .build())
                         .map(Example::of)
                         .flatMap(studioRepository::findOne)
-                        .doOnNext(studio -> studioToId.put(studio.getName(), studio.getId()))
+                        //.doOnNext(studio -> studioToId.put(studio.getName(), studio.getId()))
                         .blockLast();
 
                 var producers = cells[PRODUCERS_COLUMN].split(",\\s*|\\s+and\\s+");

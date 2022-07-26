@@ -5,6 +5,7 @@ import com.sampaio.hiroshi.worstmovie.app.producer.ProducerRepository;
 import com.sampaio.hiroshi.worstmovie.app.studio.Studio;
 import com.sampaio.hiroshi.worstmovie.app.studio.StudioRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = "logging.level.com.sampaio.hiroshi.worstmovie=trace")
+        properties = {
+                "logging.level.com.sampaio.hiroshi.worstmovie=debug",
+                "spring.profiles.active=test"})
 class ManyToManyRepositoriesTest {
 
     @Autowired
@@ -75,6 +78,15 @@ class ManyToManyRepositoriesTest {
                 .flatMap(movieRepository::save)
                 .doOnNext(this::logCreatedEntity)
                 .block();
+    }
+
+    @AfterEach
+    void clearDatabase() {
+        movieToProducerRepository.deleteAll().block();
+        movieToStudioRepository.deleteAll().block();
+        studioRepository.deleteAll().block();
+        movieRepository.deleteAll().block();
+        producerRepository.deleteAll().block();
     }
 
     @Test
