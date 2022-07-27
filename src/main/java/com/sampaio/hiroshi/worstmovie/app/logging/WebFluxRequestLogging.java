@@ -7,25 +7,12 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import java.util.stream.Collectors;
-
 @Slf4j
 @Component
 public class WebFluxRequestLogging implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-
-        var request = exchange.getRequest();
-        log.trace("{} {} {}",
-                request.getMethod(),
-                request.getURI(),
-                request.getHeaders()
-                        .toSingleValueMap()
-                        .entrySet()
-                        .stream()
-                        .map(e -> "\n" + e.getKey() + " = " + e.getValue())
-                        .collect(Collectors.joining()));
         return chain.filter(new LoggingWebExchange(exchange));
     }
 }
