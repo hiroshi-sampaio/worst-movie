@@ -13,4 +13,8 @@ public class Studio {
     @Id
     private Long id;
     private String name;
+
+    public static Studio of(final String name) {
+        return new Studio(null, name);
+    }
 }
