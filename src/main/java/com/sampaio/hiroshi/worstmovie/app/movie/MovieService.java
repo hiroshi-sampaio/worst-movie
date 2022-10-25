@@ -32,6 +32,12 @@ public class MovieService {
     private final ProducerRepository producerRepository;
     private final MovieMapper mapper;
 
+    public Flux<MoviePayload> findAll() {
+        return movieRepository
+                .findAll()
+                .map(mapper::toMoviePayload);
+    }
+
     public Mono<MoviePayload> findById(Long movieId) {
 
         var studioListMono = movieToStudioRepository
