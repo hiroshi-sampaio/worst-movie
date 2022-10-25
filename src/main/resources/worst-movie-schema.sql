@@ -38,3 +38,10 @@ create table movie_to_studio
     studio_id bigint not null references studio (id),
     primary key (movie_id, studio_id)
 );
+
+create table winner
+(
+    prize_year bigint not null,
+    movie_id   bigint not null references movie (id),
+    primary key (prize_year)
+);
