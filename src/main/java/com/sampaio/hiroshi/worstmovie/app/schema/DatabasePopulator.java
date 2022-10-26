@@ -26,10 +26,13 @@ import reactor.core.CorePublisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
 import java.util.function.Function;
+
+import static java.util.Objects.isNull;
 
 @Slf4j
 @DependsOn("databaseSchemaCreator")
@@ -56,9 +59,19 @@ public class DatabasePopulator implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
+        var csv = args.getOptionValues("csv");
+        if (isNull(csv) || csv.isEmpty()) {
+            log.info("Skipping database population...");
+            return;
+        }
+
+        var fileName = csv.get(0);
+
+        log.info("Starting database population from file {}", fileName);
+
         final Collection<CorePublisher<?>> publishers = new ArrayList<>();
 
-        try (var inputStream = csvResource.getInputStream();
+        try (var inputStream = new FileInputStream(fileName);
              var scanner = new Scanner(inputStream)) {
 
             var ignored = scanner.nextLine(); // skip header
