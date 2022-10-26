@@ -26,6 +26,7 @@ import reactor.core.CorePublisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,19 +66,23 @@ public class DatabasePopulator implements ApplicationRunner {
             return;
         }
 
-        var fileName = csv.get(0);
+        var file = new File(csv.get(0));
+        file.setWritable(false);
 
-        log.info("Starting database population from file {}", fileName);
+        log.info("Starting database population from file {}", file);
 
         final Collection<CorePublisher<?>> publishers = new ArrayList<>();
 
-        try (var inputStream = new FileInputStream(fileName);
+        try (var inputStream = new FileInputStream(file);
              var scanner = new Scanner(inputStream)) {
 
             var ignored = scanner.nextLine(); // skip header
 
             while (scanner.hasNextLine()) {
                 var line = scanner.nextLine();
+
+                log.debug(line);
+
                 var cells = line.split(";");
 
                 // Movie
