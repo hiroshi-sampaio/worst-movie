@@ -5,11 +5,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface MovieToProducerRepository extends R2dbcRepository<MovieToProducer, Void> {
-    Mono<MovieToProducer> findByMovieId(Long movieId);
+    Flux<MovieToProducer> findByMovieId(Long movieId);
 
     Flux<MovieToProducer> findByProducerId(Long movieId);
 
-    Mono<Void> deleteByMovieId(Long movieId);
+    Flux<Void> deleteByMovieId(Long movieId);
 
     Mono<Void> deleteByMovieIdAndProducerId(Long movieId, Long producerId);
 }

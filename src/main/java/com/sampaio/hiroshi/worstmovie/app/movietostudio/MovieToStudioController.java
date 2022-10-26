@@ -34,7 +34,7 @@ public class MovieToStudioController {
 
     @GetMapping("/movie/{movieId}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<MovieToStudio> getByMovieId(@PathVariable @NotNull Long movieId) {
+    public Flux<MovieToStudio> getByMovieId(@PathVariable @NotNull Long movieId) {
 
         log.trace("get {}", movieId);
         return repository.findByMovieId(movieId);
