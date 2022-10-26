@@ -82,54 +82,12 @@ public class DatabasePopulator implements ApplicationRunner {
 
                 var movieIdMono = Mono.from(movieMono).map(Movie::getId);
 
-                // Studio
-
-                var studios = cells[STUDIOS_COLUMN].split(",\\s*|\\s+and\\s+");
-
-                var studioFlux = Flux.fromArray(studios)
-                        .map(Studio::of)
-                        .map(Example::of)
-                        .flatMap(example ->
-                                studioRepository
-                                        .findOne(example)
-                                        .switchIfEmpty(studioRepository.save(example.getProbe())))
-                        .map(Studio::getId)
-                        .zipWith(movieIdMono, (studioId, movieId) ->
-                                MovieToStudio.builder()
-                                        .studioId(studioId)
-                                        .movieId(movieId)
-                                        .build())
-                        .flatMap(movieToStudioRepository::save);
-
-                publishers.add(studioFlux);
-
-                // Producer
-
-                var producers = cells[PRODUCERS_COLUMN].split("(,\\s*|\\s+)?and\\s+|,\\s*");
-
-                var producerFlux = Flux.fromArray(producers)
-                        .map(Producer::of)
-                        .map(Example::of)
-                        .flatMap(example ->
-                                producerRepository
-                                        .findOne(example)
-                                        .switchIfEmpty(producerRepository.save(example.getProbe())))
-                        .map(Producer::getId)
-                        .zipWith(movieIdMono, (producerId, movieId) ->
-                                MovieToProducer.builder()
-                                        .producerId(producerId)
-                                        .movieId(movieId)
-                                        .build())
-                        .flatMap(movieToProducerRepository::save);
-
-                publishers.add(producerFlux);
-
                 // Winner
 
                 var winnerFlag = cells.length == 5 && !cells[WINNER_COLUMN].isBlank();
 
                 if (winnerFlag) {
-                    var winnerMono = Mono.from(movieMono)
+                    var winnerMono = movieMono
                             .map(movie -> Winner.builder()
                                     .prizeYear(movie.getReleaseYear())
                                     .movieId(movie.getId())
@@ -137,6 +95,52 @@ public class DatabasePopulator implements ApplicationRunner {
                             .flatMap(winnerRepository::save);
                     publishers.add(winnerMono);
                 }
+
+                // Studio
+
+                var studios = cells[STUDIOS_COLUMN].split(",\\s*|\\s+and\\s+");
+
+                var studioIdFlux = Flux.fromArray(studios)
+                        .map(Studio::of)
+                        .flatMap(studio ->
+                                studioRepository
+                                        .findOne(Example.of(studio))
+                                        .switchIfEmpty(studioRepository.save(studio)))
+                        .map(Studio::getId);
+
+                var movieToStudioFlux = movieIdMono
+                        .flatMapMany(movieId ->
+                                studioIdFlux.map(studioId ->
+                                        MovieToStudio.builder()
+                                                .studioId(studioId)
+                                                .movieId(movieId)
+                                                .build()))
+                        .flatMap(movieToStudioRepository::save);
+
+                publishers.add(movieToStudioFlux);
+
+                // Producer
+
+                var producers = cells[PRODUCERS_COLUMN].split("(,\\s*|\\s+)?and\\s+|,\\s*");
+
+                var producerIdFlux = Flux.fromArray(producers)
+                        .map(Producer::of)
+                        .flatMap(producer ->
+                                producerRepository
+                                        .findOne(Example.of(producer))
+                                        .switchIfEmpty(producerRepository.save(producer)))
+                        .map(Producer::getId);
+
+                var movieToProducerFlux = movieIdMono
+                        .flatMapMany(movieId ->
+                                producerIdFlux.map(producerId ->
+                                        MovieToProducer.builder()
+                                                .producerId(producerId)
+                                                .movieId(movieId)
+                                                .build()))
+                        .flatMap(movieToProducerRepository::save);
+
+                publishers.add(movieToProducerFlux);
             }
         }
 
