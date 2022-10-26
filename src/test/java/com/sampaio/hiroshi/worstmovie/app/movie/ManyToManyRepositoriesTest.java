@@ -141,10 +141,7 @@ class ManyToManyRepositoriesTest {
                 .collectList()
                 .block();
 
-        assertThat(movieToStudioList).isNotNull();
         assertThat(movieToStudioList).hasSize(3);
-
-        assertThat(movieToProducerList).isNotNull();
         assertThat(movieToProducerList).hasSize(5);
 
 
@@ -172,7 +169,6 @@ class ManyToManyRepositoriesTest {
                 .collectList()
                 .block();
 
-        assertThat(deletedMovieToStudioList).isNotNull();
         assertThat(deletedMovieToStudioList).isEmpty();
 
 
@@ -196,7 +192,6 @@ class ManyToManyRepositoriesTest {
                 .collectList()
                 .block();
 
-        assertThat(deletedMovieToProducerList).isNotNull();
         assertThat(deletedMovieToProducerList).isEmpty();
     }
 }
