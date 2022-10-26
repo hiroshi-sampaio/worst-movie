@@ -15,6 +15,8 @@ import reactor.util.function.Tuples;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -59,6 +61,7 @@ public class BusinessService {
                                 .build())))
                 .filter(producerWinInterval -> producerWinInterval.getInterval() != 0)
                 .collect(Collectors.groupingBy(IntervalBetweenWinsForProducer::getInterval))
+                .filter(Predicate.not(Map::isEmpty))
                 .map(map -> {
                     var keySet = map.keySet();
                     var min = Collections.min(keySet);
