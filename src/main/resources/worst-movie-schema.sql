@@ -41,7 +41,6 @@ create table movie_to_studio
 
 create table winner
 (
-    prize_year bigint not null,
-    movie_id   bigint not null references movie (id),
-    primary key (prize_year)
+    prize_year integer not null,
+    movie_id   bigint not null references movie (id)
 );

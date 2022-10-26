@@ -1,7 +1,6 @@
 package com.sampaio.hiroshi.worstmovie.app.winner;
 
 import com.sampaio.hiroshi.worstmovie.app.common.EntityDoesNotExistException;
-import com.sampaio.hiroshi.worstmovie.app.common.IdMustBeEmptyException;
 import com.sampaio.hiroshi.worstmovie.app.common.IdMustBeGivenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,6 @@ import reactor.core.publisher.Mono;
 import javax.validation.constraints.NotNull;
 
 import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 
 @Slf4j
 @RestController
@@ -41,17 +39,12 @@ public class WinnerController {
     @GetMapping("/{prizeYear}")
     @ResponseStatus(HttpStatus.OK)
     public Mono<Winner> get(@PathVariable @NotNull Integer prizeYear) {
-        return repository.findById(prizeYear);
+        return repository.findByPrizeYear(prizeYear);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Winner> post(@RequestBody @NotNull Winner winner) {
-
-        if (nonNull(winner.getPrizeYear())) {
-            throw new IdMustBeEmptyException();
-        }
-
         return repository.save(winner);
     }
 
@@ -63,10 +56,12 @@ public class WinnerController {
             throw new IdMustBeGivenException();
         }
 
-        return repository.existsById(winner.getPrizeYear())
-                .doOnNext(exists -> {
-                    if (!exists) throw new EntityDoesNotExistException();
+        return repository.findByPrizeYear(winner.getPrizeYear())
+                .hasElement()
+                .doOnNext(hasElement -> {
+                    if (!hasElement) throw new EntityDoesNotExistException();
                 })
+                .then(repository.deleteByPrizeYear(winner.getPrizeYear()))
                 .then(repository.save(winner))
                 .then(Mono.empty());
     }
@@ -74,6 +69,6 @@ public class WinnerController {
     @DeleteMapping("/{prizeYear}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> delete(@PathVariable @NotNull Integer prizeYear) {
-        return repository.deleteById(prizeYear);
+        return repository.deleteByPrizeYear(prizeYear);
     }
 }
