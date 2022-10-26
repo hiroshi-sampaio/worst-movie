@@ -8,7 +8,7 @@ Simply run:
 
 ### How to run the application
 
-```java -jar target/WorstMovie-0.0.1-SNAPSHOT.jar --csv=src/main/resources/movielist.csv```
+```java -jar target/WorstMovie-0.0.1-SNAPSHOT.jar --csv=src/test/resources/movielist.csv```
 
 The ```--csv``` parameter is optional. You can give a CSV file to populate the database on 
 application startup.
