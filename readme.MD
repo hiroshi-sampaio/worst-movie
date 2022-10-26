@@ -1,10 +1,12 @@
 ### worst-movie
 A microservice that gives metrics about Golden Raspberry Awards.
 
-### How to build
+### How to build and run the integration tests
 Simply run:
 
 ```./mvnw clean install```
+
+The test required is the ```com.sampaio.hiroshi.worstmovie.WorstMovieApplicationTest``` one
 
 ### How to run the application
 
