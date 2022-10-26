@@ -6,6 +6,7 @@ import lombok.extern.jackson.Jacksonized;
 import org.springframework.data.annotation.Id;
 
 import java.util.Arrays;
+import java.util.StringJoiner;
 import java.util.regex.Pattern;
 
 @Data
@@ -33,5 +34,17 @@ public class Producer {
         }
 
         return builder.build();
+    }
+
+    public String getFullName() {
+        final StringJoiner joiner = new StringJoiner(" ");
+        joiner.add(getFistName());
+        if (null != getMiddleNames() && !getMiddleNames().isBlank()) {
+            joiner.add(getMiddleNames());
+        }
+        if (null != getLastName() && !getLastName().isBlank()) {
+            joiner.add(getLastName());
+        }
+        return joiner.toString();
     }
 }
