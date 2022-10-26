@@ -30,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        args = "--csv=src/main/resources/movielist.csv",
         properties = {
                 "logging.level.com.sampaio.hiroshi.worstmovie=trace",
                 "spring.profiles.active=test"})

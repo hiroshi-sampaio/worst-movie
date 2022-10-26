@@ -1,4 +1,4 @@
-drop table if exists movie_to_producer, movie_to_studio, studio, producer, movie cascade;
+drop table if exists movie_to_producer, movie_to_studio, studio, producer, movie, winner cascade;
 
 create table studio
 (
