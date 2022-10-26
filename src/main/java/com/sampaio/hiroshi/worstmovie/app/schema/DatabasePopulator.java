@@ -14,20 +14,17 @@ import com.sampaio.hiroshi.worstmovie.app.winner.Winner;
 import com.sampaio.hiroshi.worstmovie.app.winner.WinnerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 import reactor.core.CorePublisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
@@ -48,8 +45,6 @@ public class DatabasePopulator implements ApplicationRunner {
     public static final int PRODUCERS_COLUMN = 3;
     public static final int WINNER_COLUMN = 4;
 
-    @Value("classpath:movielist.csv")
-    private final Resource csvResource;
     private final StudioRepository studioRepository;
     private final ProducerRepository producerRepository;
     private final MovieRepository movieRepository;
@@ -66,14 +61,13 @@ public class DatabasePopulator implements ApplicationRunner {
             return;
         }
 
-        var file = new File(csv.get(0));
-        file.setWritable(false);
+        var fileName = csv.get(0);
 
-        log.info("Starting database population from file {}", file);
+        log.info("Starting database population from file {}", fileName);
 
         final Collection<CorePublisher<?>> publishers = new ArrayList<>();
 
-        try (var inputStream = new FileInputStream(file);
+        try (var inputStream = new FileReader(fileName);
              var scanner = new Scanner(inputStream)) {
 
             var ignored = scanner.nextLine(); // skip header

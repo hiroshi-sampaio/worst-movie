@@ -1,6 +1,5 @@
 package com.sampaio.hiroshi.worstmovie;
 
-import com.sampaio.hiroshi.worstmovie.app.business.IntervalBetweenWinsForProducer;
 import com.sampaio.hiroshi.worstmovie.app.business.ProducersWithMaxAndMinIntervalBetweenPrizesResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -8,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
-
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,18 +33,17 @@ class WorstMovieApplicationTest {
 
         assertThat(body).isNotNull();
 
-        assertThat(body.getMin()).hasSize(38);
-
-        var occurrencesCount = body.getMin().stream()
-                .map(IntervalBetweenWinsForProducer::getProducer)
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-        assertThat(occurrencesCount)
-                .containsEntry("Matthew Vaughn", 37L)
-                .containsEntry("Joel Silver", 1L);
+        assertThat(body.getMin()).hasSize(1);
+        assertThat(body.getMin().get(0).getProducer()).isEqualTo("Joel Silver");
+        assertThat(body.getMin().get(0).getPreviousWin()).isEqualTo(1990);
+        assertThat(body.getMin().get(0).getFollowingWin()).isEqualTo(1991);
+        assertThat(body.getMin().get(0).getInterval()).isOne();
 
         assertThat(body.getMax()).hasSize(1);
-        assertThat(body.getMax().get(0).getProducer()).isEqualTo("Buzz Feitshans");
+        assertThat(body.getMax().get(0).getProducer()).isEqualTo("Matthew Vaughn");
+        assertThat(body.getMax().get(0).getPreviousWin()).isEqualTo(2002);
+        assertThat(body.getMax().get(0).getFollowingWin()).isEqualTo(2015);
+        assertThat(body.getMax().get(0).getInterval()).isEqualTo(13);
     }
 
 }
