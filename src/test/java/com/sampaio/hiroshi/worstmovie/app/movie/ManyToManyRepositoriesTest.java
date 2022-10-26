@@ -1,5 +1,9 @@
 package com.sampaio.hiroshi.worstmovie.app.movie;
 
+import com.sampaio.hiroshi.worstmovie.app.movietoproducer.MovieToProducer;
+import com.sampaio.hiroshi.worstmovie.app.movietoproducer.MovieToProducerRepository;
+import com.sampaio.hiroshi.worstmovie.app.movietostudio.MovieToStudio;
+import com.sampaio.hiroshi.worstmovie.app.movietostudio.MovieToStudioRepository;
 import com.sampaio.hiroshi.worstmovie.app.producer.Producer;
 import com.sampaio.hiroshi.worstmovie.app.producer.ProducerRepository;
 import com.sampaio.hiroshi.worstmovie.app.studio.Studio;

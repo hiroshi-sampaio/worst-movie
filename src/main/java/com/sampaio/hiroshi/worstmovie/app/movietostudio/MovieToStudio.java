@@ -1,4 +1,4 @@
-package com.sampaio.hiroshi.worstmovie.app.movie;
+package com.sampaio.hiroshi.worstmovie.app.movietostudio;
 
 import lombok.Builder;
 import lombok.Data;

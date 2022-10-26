@@ -1,9 +1,13 @@
-package com.sampaio.hiroshi.worstmovie.app.movie;
+package com.sampaio.hiroshi.worstmovie.app.movietoproducer;
 
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface MovieToProducerRepository extends R2dbcRepository<MovieToProducer, Void> {
+    Mono<MovieToProducer> findByMovieId(Long movieId);
+
+    Flux<MovieToProducer> findByProducerId(Long movieId);
 
     Mono<Void> deleteByMovieId(Long movieId);
 
